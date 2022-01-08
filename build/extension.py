@@ -28,33 +28,12 @@ def add_task():
         file.close()    
         vscode.window.show_text_document(dirn+'/Tasks.txt')
     else:
-        return vscode.window.show_info_message('COOl ! Keep Me Updated !')
-
-'''    
-    res = vscode.window.show_info_message('Add New Task?', 'Yes', 'No')
-    while res == 'Yes':
-        taskname = vscode.InputBoxOptions(title='Your Task Name-')
-        resp1 = show_input_box(taskname)                            #Task Name
-        taskdate = vscode.InputBoxOptions(title='Date-')
-        resp2 = show_input_box(taskdate)                            #Task Date
-        tasktime = vscode.InputBoxOptions(title='Time-')
-        resp3 = show_input_box(tasktime)                            #Task Time
-    
-
-        if not resp1:
-            vscode.window.show_warn_message('No Task Added !!')
-            res = vscode.window.show_info_message('New Task?', 'Yes', 'Nah')
-        else:
-            file.write(resp1 + ' ' * (20-len(resp1)) + " on " + resp2 + ' at ' + resp3 + '\n') #File Tasks is updated with a new Task
-            show_info_message(f"Your taskname '{resp1}' is updated")
-            res = vscode.window.show_info_message('New Task?', 'Yes', 'Nah')
-    else:
-        file.close()
-
-        return vscode.window.show_info_message('COOl ! Keep Me Updated !')
-'''    
+        return vscode.window.show_info_message('COOl ! Keep Me Updated !')   
 
 @ext.command(keybind="ALT+4")
+
+#This fn of the code basically shows the list of tasks in a project and can delete if any task is done 
+
 def mark_done():
     cwd = vscode.window.show_open_dialog()
     dirn = os.path.dirname(cwd[0]['path'])
@@ -65,7 +44,7 @@ def mark_done():
     except:
          vscode.window.show_error_message('Tasks not added to this project !')      
     
-    #Standardising text Doc
+    #Standardising txt file
     x=1
     while x > 0:
         try:
@@ -73,7 +52,7 @@ def mark_done():
             tasks.pop(n)
         except:
             x=0   
-    print(tasks)
+
 
     taskshow = []
     for i in range(0,len(tasks),3):
@@ -81,60 +60,74 @@ def mark_done():
             taskshow.append(tasks[i] + tasks[i+1] + tasks[i+2])
         except:
             continue    
-    
 
-     
+    # Removing the DONE task from txt file 
     for i in range(len(taskshow)):
-        try:
             t = vscode.window.show_quick_pick(taskshow)
-            n = taskshow.index(t)
-            taskshow.pop(n)
-            vscode.window.show_info_message('Task marked done and removed !')
-        except:
-            vscode.window.show_info_message('No Task Marked Done !')
+            if not t:
+                vscode.window.show_info_message('No Task Marked Done !')
+                break
+            else:
+                n = taskshow.index(t)
+                taskshow.pop(n)
+                vscode.window.show_info_message(t+' marked done and removed !')
+ 
    
 
     file = open(dirn+'/Tasks.txt', 'w')
     taskfinal = []
     for i in range(len(taskshow)):
          a= taskshow[i].split('\n')
-         print(a)
          for j in range(3):
              taskfinal.append(a[j]+'\n')
+         taskfinal.append('\n')
+
     taskfinal.append('\n')
+
     for i in range(len(taskfinal)):
              file.write(taskfinal[i])
     file.close()
     
     vscode.window.show_info_message('Task List Updated !')
-             
-    
 
+#This fn can EDIT the tasks txt file
 @ext.command(keybind="ALT+3")
 def edit_task():
-    cwd = vscode.window.show_open_dialog()
-    dirn = os.path.dirname(cwd[0]['path'])
-    try:    
-         file = open(dirn+'/Tasks.txt', 'r')
-         tasks = file.readlines()
-         file.close()
-         t = vscode.window.show_quick_pick(tasks)
-         file = open(dirn+'/Tasks.txt', 'w')
-         n = tasks.index(t)
-         tasks.pop(n)
-         
-         vscode.window.show_text_document(dirn+'/Tasks.txt', 'r')
+    edit = vscode.window.show_info_message('Wanna Edit Tasks ?', 'Yes', 'No')
+    if edit == 'Yes':
+        cwd = vscode.window.show_open_dialog()
+        dirn = os.path.dirname(cwd[0]['path'])
+        try:    
+          file = open(dirn+'/Tasks.txt', 'r')
+          tasks = file.readlines()
+          file.close()
+        except:
+          return vscode.window.show_error_message('Tasks not added to this project !') 
 
-         for i in range(len(tasks)):
-             file.write(tasks[i])
+        vscode.window.show_text_document(dirn+'/Tasks.txt') 
+        stat = vscode.window.show_info_message('Done Editing ?', 'Yes')
+        file = open(dirn+'/Tasks.txt', 'r')
+        tasks = file.readlines()
+        file.close()
+        if stat == 'Yes':
+            x=1
+            while x > 0:
+               try:
+                n=tasks.index('\n')
+                tasks.pop(n)
+               except:
+                x=0   
 
-         vscode.window.show_info_message('Task edited !', 'Okay', 'exit')     
-         vscode.window.show_quick_pick(tasks)
+            taskshow = []
+            for i in range(0,len(tasks),3):
+               try:
+                  taskshow.append(tasks[i] + tasks[i+1] + tasks[i+2])
+               except:
+                  continue
+        vscode.window.show_info_message('Task edited !')         
+        vscode.window.show_quick_pick(taskshow)
+
             
-    except:
-         vscode.window.show_error_message('Tasks not added to this project !')           
-
-
 
 
 
