@@ -12,8 +12,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "testpy.taskM",
-        "title": "Task M"
+        "command": "testpy.addTask",
+        "title": "Add Task"
+      },
+      {
+        "command": "testpy.markDone",
+        "title": "Mark Done"
+      },
+      {
+        "command": "testpy.editTask",
+        "title": "Edit Task"
       }
     ],
     "configuration": {
@@ -22,12 +30,22 @@
     },
     "keybindings": [
       {
-        "command": "testpy.taskM",
+        "command": "testpy.addTask",
         "key": "ALT+5"
+      },
+      {
+        "command": "testpy.markDone",
+        "key": "ALT+4"
+      },
+      {
+        "command": "testpy.editTask",
+        "key": "ALT+3"
       }
     ]
   },
   "activationEvents": [
-    "onCommand:testpy.taskM"
+    "onCommand:testpy.addTask",
+    "onCommand:testpy.markDone",
+    "onCommand:testpy.editTask"
   ]
 }

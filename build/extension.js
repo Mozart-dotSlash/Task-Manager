@@ -181,8 +181,8 @@ class Webview {
 function activate(context) {
 let globalStorage = {}
 console.log("The Extension 'testpy' has started");
-let taskM = vscode.commands.registerCommand('testpy.taskM',async function () {
-let funcName = "task_m"; let pyVar = "python3";
+let addTask = vscode.commands.registerCommand('testpy.addTask',async function () {
+let funcName = "add_task"; let pyVar = "python3";
         let py = spawn(pyVar, [pythonPath, funcName]);
 
         py.stdout.on("data", (data) => {
@@ -196,7 +196,39 @@ let funcName = "task_m"; let pyVar = "python3";
             console.error(`An Error occurred in the python script: ${data}`);
         });
         });
-context.subscriptions.push(taskM);
+context.subscriptions.push(addTask);
+let markDone = vscode.commands.registerCommand('testpy.markDone',async function () {
+let funcName = "mark_done"; let pyVar = "python3";
+        let py = spawn(pyVar, [pythonPath, funcName]);
+
+        py.stdout.on("data", (data) => {
+            try {
+            executeCommands(py, data, globalStorage);
+            } catch (e) {
+            console.error(e);
+            }
+        });
+        py.stderr.on("data", (data) => {
+            console.error(`An Error occurred in the python script: ${data}`);
+        });
+        });
+context.subscriptions.push(markDone);
+let editTask = vscode.commands.registerCommand('testpy.editTask',async function () {
+let funcName = "edit_task"; let pyVar = "python3";
+        let py = spawn(pyVar, [pythonPath, funcName]);
+
+        py.stdout.on("data", (data) => {
+            try {
+            executeCommands(py, data, globalStorage);
+            } catch (e) {
+            console.error(e);
+            }
+        });
+        py.stderr.on("data", (data) => {
+            console.error(`An Error occurred in the python script: ${data}`);
+        });
+        });
+context.subscriptions.push(editTask);
 }
 
 function deactivate() {}
