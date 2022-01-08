@@ -1,0 +1,33 @@
+{
+  "name": "testpy",
+  "displayName": "Task Manager",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.58.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./build/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "testpy.taskM",
+        "title": "Task M"
+      }
+    ],
+    "configuration": {
+      "title": "Task Manager",
+      "properties": {}
+    },
+    "keybindings": [
+      {
+        "command": "testpy.taskM",
+        "key": "ALT+5"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onCommand:testpy.taskM"
+  ]
+}
